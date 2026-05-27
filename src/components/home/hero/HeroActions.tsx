@@ -63,6 +63,7 @@ export function HeroActions({ channelUrl }: HeroActionsProps) {
             aria-hidden="true"
             width={24}
             height={24}
+            loading="eager"
             className="mr-2 h-6 w-6 rounded-sm object-contain"
           />
           {link.label}
