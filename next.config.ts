@@ -1,14 +1,15 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS === "true";
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1];
-const basePath = isGithubActions && repositoryName ? `/${repositoryName}` : "";
+// const isGithubActions = process.env.GITHUB_ACTIONS === "true";
+// const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1];
+// const basePath = isGithubActions && repositoryName ? `/${repositoryName}` : "";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
+  // reactCompiler: true,
   output: "export",
-  trailingSlash: true,
-  basePath,
+  // trailingSlash: true,
+  // basePath,
+  // assetPrefix: basePath ? `${basePath}/` : undefined,
   images: {
     unoptimized: true,
   },
