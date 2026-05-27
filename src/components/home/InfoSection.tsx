@@ -5,7 +5,7 @@ type InfoSectionProps = {
 
 export function InfoSection({ offerings, topics }: InfoSectionProps) {
   return (
-    <section className="grid gap-6 lg:grid-cols-2">
+    <section className="animate-fade-up-delay-2 grid gap-6 lg:grid-cols-2">
       <article className="rounded-2xl border border-white/15 bg-white/[0.04] p-5 backdrop-blur-lg sm:p-6">
         <h2 className="text-2xl font-semibold text-white">What We Offer</h2>
         <ul className="mt-4 space-y-3">

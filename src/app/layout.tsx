@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "Raah-e-Hidayah | Authentic Islamic Guidance",
   description:
     "Raah-e-Hidayah is a digital platform for authentic Islamic lectures, Majalis programs, and spiritual guidance from trusted scholars.",
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    shortcut: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({

@@ -10,101 +10,56 @@ export type VideoItem = {
 export type VideoCollection = {
   title: string;
   year: number;
+  month: number;
   videos: VideoItem[];
 };
 
-type CsvVideo = {
-  source: string;
+type JsonVideo = {
   title: string;
-  videoUrl: string;
-  publishedAt: string;
+  url: string;
 };
 
-function parseCsvLine(line: string) {
-  const cells: string[] = [];
-  let current = "";
-  let inQuotes = false;
+type JsonPlaylist = {
+  title: string;
+  year: number;
+  month: number;
+  videos: JsonVideo[];
+};
 
-  for (let i = 0; i < line.length; i += 1) {
-    const char = line[i];
+function loadPlaylistsFromJson(): JsonPlaylist[] {
+  const jsonDir = path.join(process.cwd(), "src/data/json");
+  const jsonFiles = readdirSync(jsonDir).filter((file) => file.endsWith(".json"));
 
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
+  const playlists: JsonPlaylist[] = [];
+  for (const fileName of jsonFiles) {
+    const filePath = path.join(jsonDir, fileName);
+    const raw = readFileSync(filePath, "utf8");
+    const parsed = JSON.parse(raw) as JsonPlaylist;
+    if (
+      !parsed?.title ||
+      !parsed?.year ||
+      !parsed?.month ||
+      !Array.isArray(parsed?.videos)
+    ) {
       continue;
     }
-
-    if (char === "," && !inQuotes) {
-      cells.push(current);
-      current = "";
-      continue;
-    }
-
-    current += char;
+    playlists.push(parsed);
   }
 
-  cells.push(current);
-  return cells;
-}
-
-function loadVideosFromCsv(): CsvVideo[] {
-  const dataDir = path.join(process.cwd(), "src/data");
-  const csvFiles = readdirSync(dataDir).filter((file) => file.endsWith(".csv"));
-  const rows: CsvVideo[] = [];
-
-  for (const fileName of csvFiles) {
-    const csvPath = path.join(dataDir, fileName);
-    const csv = readFileSync(csvPath, "utf8");
-
-    const fileRows = csv
-      .split(/\r?\n/)
-      .filter(Boolean)
-      .slice(1)
-      .map((line) => parseCsvLine(line))
-      .map((cells) => ({
-        source: fileName.replace(".csv", ""),
-        title: cells[1],
-        videoUrl: cells[2],
-        publishedAt: cells[4],
-      }))
-      .filter((row) => row.title && row.videoUrl && row.publishedAt);
-
-    rows.push(...fileRows);
-  }
-
-  return rows;
+  return playlists;
 }
 
 export function getVideoCollections(): VideoCollection[] {
-  const videos = loadVideosFromCsv();
-  const grouped = new Map<string, CsvVideo[]>();
-
-  for (const video of videos) {
-    if (!grouped.has(video.source)) grouped.set(video.source, []);
-    grouped.get(video.source)?.push(video);
-  }
-
-  return [...grouped.entries()]
-    .map(([source, rows]) => {
-      const sourceLabel = source
-        .replace(/^youtube-playlist-links-/, "")
-        .replace(/-\d{4}-\d{2}-\d{2}$/, "")
-        .slice(0, 24);
-      const newestYear = Math.max(...rows.map((row) => new Date(row.publishedAt).getUTCFullYear()));
-
-      return {
-        title: `Playlist ${sourceLabel}`,
-        year: newestYear,
-        videos: rows.slice(0, 10).map((row) => {
-          const parsed = new URL(row.videoUrl);
-          const videoId = parsed.searchParams.get("v") ?? "";
-          return { url: row.videoUrl, videoId, title: row.title };
-        }),
-      };
-    })
-    .sort((a, b) => b.year - a.year);
+  return loadPlaylistsFromJson()
+    .map((playlist) => ({
+      title: playlist.title,
+      year: playlist.year,
+      month: playlist.month,
+      videos: playlist.videos.slice(0, 10).map((video) => {
+        const parsed = new URL(video.url);
+        const videoId = parsed.searchParams.get("v") ?? "";
+        return { url: video.url, videoId, title: video.title };
+      }),
+    }))
+    .sort((a, b) => b.year - a.year || b.month - a.month || a.title.localeCompare(b.title));
 }
