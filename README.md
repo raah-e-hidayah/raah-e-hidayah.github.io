@@ -45,3 +45,9 @@ This repo is configured for static export + GitHub Pages via Actions.
 4. Push to the `main` branch (or run the `Deploy static content to Pages` workflow manually).
 
 The workflow builds the site using `next build` and deploys the generated `out/` directory to Pages.
+
+If your first run fails with a Pages "Not Found" error, add a repository secret named `PAGES_ENABLEMENT_TOKEN`:
+
+1. Create a fine-grained personal access token scoped to this repository.
+2. Grant repository permissions for `Pages: Read and write` and `Administration: Read and write`.
+3. Add it in `Settings` -> `Secrets and variables` -> `Actions` as `PAGES_ENABLEMENT_TOKEN`.
