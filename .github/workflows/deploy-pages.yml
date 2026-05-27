@@ -27,9 +27,7 @@ jobs:
 
       - name: Export static output
         run: |
-          mkdir -p out
-          cp -r .next/static out/_next/static
-          cp -r public out
+          test -d out
           touch ./out/.nojekyll
 
       - name: Deploy
