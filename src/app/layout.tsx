@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Raah-e-Hidayah | Authentic Islamic Guidance",
+  title: "Raah-e-Hidayah | Home",
   description:
     "Raah-e-Hidayah is a digital platform for authentic Islamic lectures, Majalis programs, and spiritual guidance from trusted scholars.",
 };
@@ -24,10 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

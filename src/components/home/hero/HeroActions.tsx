@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { trackEvent } from "@/services/firebase";
 
 type ActionLink = {
   href: string;
@@ -56,6 +57,9 @@ export function HeroActions({ channelUrl }: HeroActionsProps) {
           target={link.external ? "_blank" : undefined}
           rel={link.external ? "noopener noreferrer" : undefined}
           className={link.className}
+          onClick={() => {
+            trackEvent("hero_action_clicked", { label: link.label });
+          }}
         >
           <Image
             src={link.iconSrc}
