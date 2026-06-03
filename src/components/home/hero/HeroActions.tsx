@@ -3,6 +3,7 @@ import Image from "next/image";
 import { trackEvent } from "@/services/firebase";
 
 type ActionLink = {
+  eventId: string;
   href: string;
   label: string;
   className: string;
@@ -16,6 +17,7 @@ type HeroActionsProps = {
 
 const actionLinks = (channelUrl: string): ActionLink[] => [
   {
+    eventId: "home_subscribe_youtube",
     href: `${channelUrl}?sub_confirmation=1`,
     label: "Subscribe on YouTube",
     className:
@@ -24,6 +26,7 @@ const actionLinks = (channelUrl: string): ActionLink[] => [
     external: true,
   },
   {
+    eventId: "home_email_us",
     href: "mailto:raahehidayah01@gmail.com?subject=Contact%20from%20Raah-e-Hidayah%20Website",
     label: "Email Us",
     className:
@@ -31,6 +34,7 @@ const actionLinks = (channelUrl: string): ActionLink[] => [
     iconSrc: "/gmail.png",
   },
   {
+    eventId: "home_whatsapp_1",
     href: "https://wa.me/919502039079",
     label: "WhatsApp 1",
     className:
@@ -39,6 +43,7 @@ const actionLinks = (channelUrl: string): ActionLink[] => [
     external: true,
   },
   {
+    eventId: "home_whatsapp_2",
     href: "https://wa.me/917994671492",
     label: "WhatsApp 2",
     className:
@@ -59,7 +64,7 @@ export function HeroActions({ channelUrl }: HeroActionsProps) {
           rel={link.external ? "noopener noreferrer" : undefined}
           className={link.className}
           onClick={() => {
-            trackEvent("hero_action_clicked", { label: link.label });
+            trackEvent(link.eventId);
           }}
         >
           <Image
